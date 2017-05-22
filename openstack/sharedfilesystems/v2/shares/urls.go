@@ -23,3 +23,7 @@ func getMicroversionsURL(c *gophercloud.ServiceClient) string {
 	slashIndexBeforeProjectID := strings.LastIndex(baseURLWithoutEndingSlashes, "/")
 	return baseURLWithoutEndingSlashes[:slashIndexBeforeProjectID] + "/"
 }
+
+func grantAccessURL(c *gophercloud.ServiceClient, id string) string {
+	return c.ServiceURL("shares", id, "action")
+}
