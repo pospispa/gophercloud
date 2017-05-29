@@ -14,7 +14,7 @@ type ServiceClient struct {
 
 	// Endpoint is the base URL of the service's API, acquired from a service catalog.
 	// It MUST end with a /.
-	Endpoint string
+	Endpoint EndpointInfo
 
 	// ResourceBase is the base URL shared by the resources within a service's API. It should include
 	// the API version and, like Endpoint, MUST end with a / if set. If not set, the Endpoint is used
@@ -29,7 +29,7 @@ func (client *ServiceClient) ResourceBaseURL() string {
 	if client.ResourceBase != "" {
 		return client.ResourceBase
 	}
-	return client.Endpoint
+	return client.Endpoint.GetURL()
 }
 
 // ServiceURL constructs a URL for a resource belonging to this provider.

@@ -53,6 +53,50 @@ type EndpointOpts struct {
 	Availability Availability
 }
 
+type Version string
+
+const (
+	V20 Version = "v2.0"
+	V30 Version = "v3.0"
+)
+
+type v2Token struct {
+	TenantID    string
+	PublicURL   string
+	InternalURL string
+	AdminURL    string
+	Region      string
+	VersionID   string
+	VersionInfo string
+	VersionList string
+}
+
+type v3Token struct {
+	id                string
+	region            string
+	endpointInterface string
+	url               string
+}
+
+type v3EndpointExtraInfo struct {
+	microversion string
+}
+
+type EndpointInfo struct {
+	initialized         bool
+	url                 string
+	serviceType         string
+	name                string
+	version             Version
+	v2Endpoint          v2Token
+	v3Endpoint          v3Token
+	v3EndpointExtraInfo v3EndpointExtraInfo
+}
+
+func (e *EndpointInfo) GetURL() string {
+	return e.url
+}
+
 /*
 EndpointLocator is an internal function to be used by provider implementations.
 
@@ -60,7 +104,7 @@ It provides an implementation that locates a single endpoint from a service
 catalog for a specific ProviderClient based on user-provided EndpointOpts. The
 provider then uses it to discover related ServiceClients.
 */
-type EndpointLocator func(EndpointOpts) (string, error)
+type EndpointLocator func(EndpointOpts) (EndpointInfo, error)
 
 // ApplyDefaults is an internal method to be used by provider implementations.
 //
