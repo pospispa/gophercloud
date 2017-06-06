@@ -10,6 +10,7 @@ import (
 	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
 	"github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/shares"
 	"github.com/gophercloud/gophercloud/openstack/utils"
+	microver "github.com/pospispa/openstackmicroversions"
 )
 
 const (
@@ -276,8 +277,10 @@ func NewSharedFileSystemV2(client *gophercloud.ProviderClient, eo gophercloud.En
 	// keep ServiceClient.Microversion empty in case an attempt to get a Microversion fails
 	if extractedMicroversionsReqResp, err := respMicroversions.ExtractMicroversion(); err == nil {
 		for _, extractedMicroversion := range *extractedMicroversionsReqResp {
-			if extractedMicroversion.Status == apiVersionStatusCurrent && len(extractedMicroversion.Version) > 0 {
-				serviceClient.Microversion = extractedMicroversion.Version
+			if extractedMicroversion.Status == apiVersionStatusCurrent {
+				if rcvdVer, err := microver.New(extractedMicroversion.Version); err == nil {
+					serviceClient.Microversion = rcvdVer
+				} // else ignore received Microversion in invalid format
 			}
 		}
 	}
