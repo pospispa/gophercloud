@@ -1,0 +1,15 @@
+hash: ebfa8c7dd987a7d749a16854039c8275e350cf356ae3e942cf5d81b68bce036f
+updated: 2017-06-06T17:02:19.897121116+02:00
+imports:
+- name: github.com/pospispa/openstackmicroversions
+  version: 011877b4c9ea30ae0b60968e609535ee29f1f7c4
+- name: golang.org/x/crypto
+  version: e1a4589e7d3ea14a3352255d04b6f1a418845e5e
+  subpackages:
+  - curve25519
+  - ed25519
+  - ed25519/internal/edwards25519
+  - ssh
+- name: gopkg.in/yaml.v2
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
+testImports: []
