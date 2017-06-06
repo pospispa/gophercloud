@@ -10,6 +10,7 @@ import (
 	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
 	sfsapi "github.com/gophercloud/gophercloud/openstack/sharedfilesystems/apiversions"
 	"github.com/gophercloud/gophercloud/openstack/utils"
+	microver "github.com/pospispa/openstackmicroversions"
 )
 
 const (
@@ -272,7 +273,9 @@ func NewSharedFileSystemV2(client *gophercloud.ProviderClient, eo gophercloud.En
 		return sc, err
 	}
 
-	sc.Microversion = apiVersion.Version
+	if mcrVer, err := microver.New(apiVersion.Version); err == nil {
+		sc.Microversion = mcrVer
+	}
 
 	return sc, nil
 }
