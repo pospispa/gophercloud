@@ -1,0 +1,8 @@
+package: github.com/gophercloud/gophercloud
+import:
+- package: github.com/pospispa/openstackmicroversions
+  version: ^v0.1
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh
+- package: gopkg.in/yaml.v2
