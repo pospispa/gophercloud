@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	grantAccessAPIRequestName     = "Grant Access"
-	grantAccessMinAPIMicroversion = "2.7"
+	grantAccessAPIRequestName            = "Grant Access"
+	grantAccessMinAPIMicroversion        = "2.7"
+	getExportLocationsAPIRequestName     = "Export Locations"
+	getExportLocationsMinAPIMicroversion = "2.14"
 )
 
 // CreateOptsBuilder allows extensions to add additional parameters to the
@@ -150,5 +152,34 @@ func GrantAccess(client *gophercloud.ServiceClient, opts GrantAccessOptsBuilder,
 	_, r.Err = client.Post(grantAccessURL(client, id), b, &r.Body, &gophercloud.RequestOpts{
 		OkCodes: []int{200, 201},
 	})
+	return
+}
+
+// GetExportLocations will get shareID's export locations
+func GetExportLocations(client *gophercloud.ServiceClient, id string) (r GetExportLocationsResult) {
+	if client.Microversion == nil {
+		err := gophercloud.ErrNoMicroversion{}
+		err.ServiceName = string(client.Type)
+		err.APIRequestName = getExportLocationsAPIRequestName
+		r.Err = err
+		return
+	}
+	minMicroversion, e := microver.New(getExportLocationsMinAPIMicroversion)
+	if e != nil {
+		err := gophercloud.BaseError{}
+		err.Info = fmt.Sprintf("Internal error: the %s API request for the %s service: %s", getExportLocationsAPIRequestName, string(client.Type), e.Error())
+		r.Err = err
+		return
+	}
+	if client.Microversion.LessThan(minMicroversion) {
+		err := gophercloud.ErrLowMicroversion{}
+		err.ServiceName = string(client.Type)
+		err.APIRequestName = getExportLocationsAPIRequestName
+		err.MinAPIMicroversion = getExportLocationsMinAPIMicroversion
+		err.CurrentAPIMicroversion = client.Microversion.String()
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Get(getExportLocationsURL(client, id), &r.Body, nil)
 	return
 }
