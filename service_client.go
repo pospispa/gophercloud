@@ -28,6 +28,8 @@ type ServiceClient struct {
 
 	// The microversion of the service to use. Set this to use a particular microversion.
 	microversion string
+	minVersion   string
+	maxVersion   string
 }
 
 // ResourceBaseURL returns the base URL of any resources used by this service. It MUST end with a /.
@@ -123,4 +125,25 @@ func (client *ServiceClient) setMicroversionHeader(opts *RequestOpts) {
 
 func (client *ServiceClient) GetMicroversion() string {
 	return client.microversion
+}
+
+func (client *ServiceClient) SetMinMaxVersion(min, max, defaultVersion string) error {
+	// TODO: validate min, validate max, check max >= min
+	if min == "" {
+		client.minVersion = defaultVersion
+	} else {
+		client.minVersion = min
+	}
+	if max == "" {
+		client.maxVersion = client.minVersion
+	} else {
+		client.maxVersion = max
+	}
+	return nil
+}
+
+func (client *ServiceClient) SetMicroversion(microversion string) error {
+	// TODO: validate microversion, check minVersion <= microversion <= maxVersion
+	client.microversion = microversion
+	return nil
 }
